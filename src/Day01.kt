@@ -1,18 +1,33 @@
+import kotlin.math.abs
+
 fun main() {
+    fun readInputDay01(input: List<String>): Pair<MutableList<Int>, MutableList<Int>> {
+        val list1 = mutableListOf<Int>()
+        val list2 = mutableListOf<Int>()
+
+        input.forEach {
+            it.split("   ").let {
+                list1.add(it.first().toInt())
+                list2.add(it[1].toInt())
+            }
+        }
+        return list1 to list2
+    }
+
     fun part1(input: List<String>): Int {
-        return input.size
+        val (list1, list2) = readInputDay01(input)
+
+        return list1.sorted().zip(list2.sorted()).fold(0) { acc, (i, j) ->
+            acc + abs(i - j)
+        }
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        val (list1, list2) = readInputDay01(input)
+
+        // Lets not talk about performance here :D
+        return list1.sumOf { curr -> (list2.count { it == curr } * curr) }
     }
-
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
