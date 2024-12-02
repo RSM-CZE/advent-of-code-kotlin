@@ -14,9 +14,11 @@ fun main() {
         val sorted = input.sortedDescending()
         val correctOrder = sorted == input || sorted == input.reversed()
         if (!correctOrder) return false
-        sorted.zipWithNext { acc, s ->
-            if (acc - s > 3 || acc - s < 1) return false
-            s
+        var prev = sorted.first()
+        for (i in 1 until sorted.size) {
+            val curr = sorted[i]
+            if (prev - curr > 3 || prev - curr < 1) return false
+            prev = sorted[i]
         }
         return true
     }
@@ -33,21 +35,19 @@ fun main() {
 
     fun part2(input: List<String>): Int {
         val reports = readInputDay02(input)
-        val variants = mutableListOf<Pair<Int, List<Int>>>().apply {
-            reports.forEachIndexed { index, ints ->
-                for (i in ints.indices) {
-                    val copy = ints.toMutableList()
-                    copy.removeAt(i)
-                    add(index to copy)
+        val variants = reports.map { report ->
+            mutableListOf<List<Int>>().apply {
+                for (i in report.indices) {
+                    add(report.toMutableList().apply { removeAt(i) })
                 }
             }
         }
-        return variants.filter {
-            matches(it.second)
-        }.map { it.first }.distinct().size
+        return variants.filter { variant ->
+            variant.any { matches(it) }
+        }.size
     }
 
-    // Read the input from the `src/Day02.txt` file.
+// Read the input from the `src/Day02.txt` file.
     val input = readInput("Day02")
     part1(input).println()
     part2(input).println()
