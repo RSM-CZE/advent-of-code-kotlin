@@ -1,4 +1,5 @@
 import kotlin.math.abs
+import kotlin.time.measureTime
 
 fun main() {
     fun readInputDay01(input: List<String>): Pair<MutableList<Int>, MutableList<Int>> {
@@ -31,6 +32,8 @@ fun main() {
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
+    measureTime {
+        part1(input).println()
+        part2(input).println()
+    }.println()
 }

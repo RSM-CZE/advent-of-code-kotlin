@@ -1,3 +1,5 @@
+import kotlin.time.measureTime
+
 // We better not talk about this day :D
 
 fun main() {
@@ -36,6 +38,8 @@ fun main() {
 
     // Read the input from the `src/Day03.txt` file.
     val input = readInput("Day03")
-    part1(input).println()
-    part2(input).println()
+    measureTime {
+        part1(input).println()
+        part2(input).println()
+    }.println()
 }
