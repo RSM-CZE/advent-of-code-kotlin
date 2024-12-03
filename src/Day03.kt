@@ -16,14 +16,13 @@ fun main() {
     }
 
     fun part1(input: List<String>): Int {
-        val wholeString = input.joinToString()
-        return findAndCalculateMuls(wholeString)
+        return findAndCalculateMuls(input.joinToString())
     }
 
     fun part2(input: List<String>): Int {
-        val wholeString = input.joinToString()
-        val sublists = wholeString.split(Regex("(?=(do\\(\\)))|(?=(don't\\(\\)))"))
-        val filteredString = sublists.filterNot { it.startsWith("don't") }.joinToString()
+        val sublists = input.joinToString().split(Regex("(?=do)"))
+        val filteredString =
+            (sublists.filter { !it.startsWith("don't()") && it.startsWith("do()") } + sublists.first()).joinToString()
         return findAndCalculateMuls(filteredString)
     }
 
