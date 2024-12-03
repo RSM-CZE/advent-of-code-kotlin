@@ -22,7 +22,7 @@ fun main() {
 
     fun part2(input: List<String>): Int {
         val wholeString = input.joinToString()
-        val sublists = wholeString.split(Regex("(?=do)|(?=don't)"))
+        val sublists = wholeString.split(Regex("(?=(do\\(\\)))|(?=(don't\\(\\)))"))
         val filteredString = sublists.filterNot { it.startsWith("don't") }.joinToString()
         return findAndCalculateMuls(filteredString)
     }
