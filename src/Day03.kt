@@ -10,12 +10,9 @@ fun main() {
             mul\((\d+),(\d+)\)
         """.trimIndent()
         )
-        val results = mulRegex.findAll(input).map {
-            it.groupValues[1].toInt() to it.groupValues[2].toInt()
+        return mulRegex.findAll(input).sumOf {
+            it.groupValues[1].toInt() * it.groupValues[2].toInt()
         }
-        return results.map {
-            it.first * it.second
-        }.sum()
     }
 
     fun part1(input: List<String>): Int {
