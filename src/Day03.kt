@@ -1,26 +1,20 @@
 import kotlin.time.measureTime
 
-// We better not talk about this day :D
+// We better not talk about regex :D
 
 fun main() {
-
-    fun String.paranthesisValue(): String? {
-        val paranthesisRegex = Regex("(?<value>(?<=\\().*(?=\\)))")
-        return paranthesisRegex.find(this)?.groupValues?.first()
-    }
 
     fun findAndCalculateMuls(input: String): Int {
         val mulRegex = Regex(
             """
-            mul\(\d+,\d+\)
+            mul\((\d+),(\d+)\)
         """.trimIndent()
         )
-        val results = mulRegex.findAll(input).map { it.value }
-        return results.mapNotNull {
-            it.paranthesisValue()
-                ?.split(",")
-                ?.reduce { a, b -> (a.toInt() * b.toInt()).toString() }
-                ?.toInt()
+        val results = mulRegex.findAll(input).map {
+            it.groupValues[1].toInt() to it.groupValues[2].toInt()
+        }
+        return results.map {
+            it.first * it.second
         }.sum()
     }
 
@@ -32,7 +26,7 @@ fun main() {
     fun part2(input: List<String>): Int {
         val wholeString = input.joinToString()
         val sublists = wholeString.split(Regex("(?=do)|(?=don't)"))
-        val filteredString = sublists.filterNot { it.contains("don't") }.joinToString()
+        val filteredString = sublists.filterNot { it.startsWith("don't") }.joinToString()
         return findAndCalculateMuls(filteredString)
     }
 
