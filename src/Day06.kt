@@ -80,6 +80,11 @@ fun main() {
         return false
     }
 
+    // Idea to make this good: if direction UP/DOWN and char | -> LOOP
+    // if direction LEFT/RIGHT and char - -> LOOP
+    // if char + -> LOOP
+
+    // This is not needed, it just makes the grid look better to see the final step path :D
     fun MutableList<MutableList<Char>>.round2(): Boolean {
         val currChar =
             findCurrChar { it == Direction.UP.char || it == Direction.DOWN.char || it == Direction.LEFT.char || it == Direction.RIGHT.char }
@@ -123,13 +128,12 @@ fun main() {
         var count = 0
         for (i in 0 until grid.size) {
             for (j in 0 until grid[i].size) {
-                println("Evaluating $i to $j")
                 if (grid[i][j] == Direction.UP.char || grid[i][j] == Direction.DOWN.char || grid[i][j] == Direction.RIGHT.char || grid[i][j] == Direction.LEFT.char) continue
                 grid[i][j] = '#'
                 // The most shit approach you can take :D
-                var iteration = 16_900
+                var iteration = grid.size * grid.first().size
                 do {
-                    val isFinished = grid.round2()
+                    val isFinished = grid.round()
                     iteration--
                     if (iteration == 0) break
                 } while (!isFinished)
