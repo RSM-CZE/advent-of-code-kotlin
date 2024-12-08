@@ -45,10 +45,9 @@ fun main() {
         return result
     }
 
-    fun part1(input: List<String>): Long {
-        val rules = readInputDay07(input)
-        return rules.sumOf { (result, components) ->
-            val operatorPermutations = listOf('+', '*').possiblePermutations(components.size - 1)
+    fun findPossibleSolutions(input: List<Pair<Long, List<Long>>>, operators: List<Char>): Long {
+        return input.sumOf { (result, components) ->
+            val operatorPermutations = operators.possiblePermutations(components.size - 1)
             operatorPermutations.firstOrNull { permutation ->
                 var equationString = ""
                 for (i in components.indices) {
@@ -64,24 +63,10 @@ fun main() {
         }
     }
 
-    fun part2(input: List<String>): Long {
-        val rules = readInputDay07(input)
-        return rules.sumOf { (result, components) ->
-            val operatorPermutations = listOf('+', '*', '|').possiblePermutations(components.size - 1)
-            operatorPermutations.firstOrNull { permutation ->
-                var equationString = ""
-                for (i in components.indices) {
-                    if (i == components.size - 1) {
-                        equationString += components[i]
-                    } else {
-                        equationString += components[i]
-                        equationString += permutation[i]
-                    }
-                }
-                equationString.calculate() == result
-            }?.let { result } ?: 0
-        }
-    }
+    fun part1(input: List<String>): Long = findPossibleSolutions(readInputDay07(input), listOf('+', '*'))
+
+
+    fun part2(input: List<String>): Long = findPossibleSolutions(readInputDay07(input), listOf('+', '*', '|'))
 
     // Read the input from the `src/Day07.txt` file.
     val input = readInput("Day07")
