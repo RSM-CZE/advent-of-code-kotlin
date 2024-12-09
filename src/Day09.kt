@@ -17,7 +17,7 @@ private data class Disk(val slots: List<StorageSlot>) {
             }
         }
     }
-    
+
     fun optimizeUnfragmented(): Disk {
         val optimizedSlots = this.slots.toMutableList()
         do {
@@ -31,7 +31,7 @@ private data class Disk(val slots: List<StorageSlot>) {
                     val emptySlot = optimizedSlots[index]
                     modified = true
                     optimizedSlots[index] = optimizedSlots[i].also {
-                        if(emptySlot.size - size == 0) {
+                        if (emptySlot.size - size == 0) {
                             optimizedSlots[i] = StorageSlot.Empty(it.size)
                         } else {
                             emptySlot as StorageSlot.Empty
@@ -109,10 +109,8 @@ fun main() {
 
     fun part2(input: List<String>): Long {
         val optimizedDisk = Disk.fromInput(input).optimizeUnfragmented().toMutableList()
-        val intList = optimizedDisk.map { it.toIntOrNull()?.toLong() }
-        return intList.reduceIndexed { index, acc, i ->
-            i?.let { acc!! + (index * it) } ?: acc
-        }!!
+        val filteredList = optimizedDisk.withIndex().filter { it.value != "." }
+        return filteredList.sumOf { (index, value) -> value.toLong() * index }
     }
 
     // Read the input from the `src/Day09.txt` file.
