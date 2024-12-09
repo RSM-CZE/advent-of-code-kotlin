@@ -1,5 +1,6 @@
 import kotlin.time.measureTime
 
+// FIXME: Make more efficient
 enum class Direction(val char: Char) {
     UP('^'), DOWN('v'), LEFT('<'), RIGHT('>');
 

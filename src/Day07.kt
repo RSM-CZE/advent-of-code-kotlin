@@ -10,7 +10,8 @@ fun main() {
     }
 
     fun String.findFirstNumber(): Long {
-        return if (!contains('+') && !contains('*') && !contains('|')) toLong()
+        val set = toSet().distinct()
+        return if (!set.contains('+') && !set.contains('*') && !set.contains('|')) toLong()
         else split('+', '*', '|').first { it.firstOrNull()?.isDigit() == true }.toLong()
     }
 
