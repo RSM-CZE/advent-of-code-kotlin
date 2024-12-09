@@ -17,8 +17,7 @@ private data class Disk(val slots: List<StorageSlot>) {
             }
         }
     }
-
-    // very inefficient, definitely could be improved with map lookup of empty spaces and their corresponding sizes
+    
     fun optimizeUnfragmented(): Disk {
         val optimizedSlots = this.slots.toMutableList()
         do {
