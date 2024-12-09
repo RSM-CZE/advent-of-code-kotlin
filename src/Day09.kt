@@ -26,8 +26,9 @@ private data class Disk(val slots: List<StorageSlot>) {
             for (i in optimizedSlots.indices.reversed()) {
                 if (optimizedSlots[i] is StorageSlot.Empty) continue
                 val size = optimizedSlots[i].size
-                optimizedSlots.indexOfFirst { it is StorageSlot.Empty && it.size >= size && optimizedSlots.indexOf(it) < i }.let { index ->
+                optimizedSlots.indexOfFirst { it is StorageSlot.Empty && it.size >= size }.let { index ->
                     if (index == -1) return@let
+                    if (index >= i) return@let
                     val emptySlot = optimizedSlots[index]
                     modified = true
                     optimizedSlots[index] = optimizedSlots[i].also {
@@ -84,7 +85,7 @@ private data class Disk(val slots: List<StorageSlot>) {
 fun main() {
     fun part1(input: List<String>): Long {
         val mutableList = Disk.fromInput(input).toMutableList()
-        var lastNonDotIndex = mutableList.indexOfLast { it != "." }
+        var lastNonDotIndex = mutableList.lastIndex - mutableList.reversed().indexOfFirst { it != "." }
         var firstDotIndex = mutableList.indexOfFirst { it == "." }
 
         while (firstDotIndex < lastNonDotIndex) {
