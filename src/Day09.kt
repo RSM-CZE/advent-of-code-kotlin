@@ -9,16 +9,12 @@ sealed interface StorageSlot {
 
 private data class Disk(val slots: List<StorageSlot>) {
     override fun toString(): String {
-        slots.flatMap { slot ->
-            mutableListOf<String>().apply {
-                for (i in 0 until slot.size) {
-                    if (slot is StorageSlot.File)
-                        add("${slot.id}+")
-                    else add(".")
-                }
+        return slots.joinToString("") { slot ->
+            if (slot is StorageSlot.File) {
+                "${slot.id}+".repeat(slot.size)
+            } else {
+                ".".repeat(slot.size)
             }
-        }.let {
-            return it.joinToString("")
         }
     }
 
@@ -49,16 +45,20 @@ private data class Disk(val slots: List<StorageSlot>) {
         return Disk(optimizedSlots)
     }
 
-    fun toList(): List<String> {
-        return slots.flatMap {
-            mutableListOf<String>().apply {
-                for (i in 0 until it.size) {
-                    if (it is StorageSlot.File)
-                        add("${it.id}")
-                    else add(".")
+    fun toMutableList(): MutableList<String> {
+        val list = mutableListOf<String>()
+        slots.forEach { slot ->
+            if (slot is StorageSlot.File) {
+                repeat(slot.size) {
+                    list.add(slot.id.toString())
+                }
+            } else {
+                repeat(slot.size) {
+                    list.add(".")
                 }
             }
         }
+        return list
     }
 
     companion object {
@@ -83,25 +83,32 @@ private data class Disk(val slots: List<StorageSlot>) {
 
 fun main() {
     fun part1(input: List<String>): Long {
-        val optimizedDisk = Disk.fromInput(input).toList().let {
-            val mutatedList = it.toMutableList()
-            for (i in mutatedList.indices.reversed()) {
-                if (mutatedList.indexOfFirst { it == "." } > mutatedList.indexOfLast { it != "." }) break
-                mutatedList[mutatedList.indexOfFirst { it == "." }] = mutatedList[i].also {
-                    mutatedList[i] = "."
+        val mutableList = Disk.fromInput(input).toMutableList()
+        var lastNonDotIndex = mutableList.indexOfLast { it != "." }
+        var firstDotIndex = mutableList.indexOfFirst { it == "." }
+
+        while (firstDotIndex < lastNonDotIndex) {
+            while (firstDotIndex < lastNonDotIndex && mutableList[firstDotIndex] != ".") {
+                firstDotIndex++
+            }
+            while (firstDotIndex < lastNonDotIndex && mutableList[lastNonDotIndex] == ".") {
+                lastNonDotIndex--
+            }
+
+            if (firstDotIndex < lastNonDotIndex) {
+                mutableList[firstDotIndex] = mutableList[lastNonDotIndex].also {
+                    mutableList[lastNonDotIndex] = mutableList[firstDotIndex]
                 }
             }
-            mutatedList
         }
         // It's already ordered, so we can ignore the points at the end
-        val intList = optimizedDisk.mapNotNull { it.toIntOrNull()?.toLong() }
-        return intList.reduceIndexed { index, acc, i ->
-            acc + (index * i)
-        }
+        val filteredList = mutableList.filter { it != "." }
+
+        return filteredList.withIndex().sumOf { (index, value) -> value.toLong() * index }
     }
 
     fun part2(input: List<String>): Long {
-        val optimizedDisk = Disk.fromInput(input).optimizeUnfragmented().toList()
+        val optimizedDisk = Disk.fromInput(input).optimizeUnfragmented().toMutableList()
         val intList = optimizedDisk.map { it.toIntOrNull()?.toLong() }
         return intList.reduceIndexed { index, acc, i ->
             i?.let { acc!! + (index * it) } ?: acc
