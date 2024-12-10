@@ -51,7 +51,7 @@ private data class Map(val grid: List<List<Int>>) {
     fun Point.getNextPoints(): List<Point> {
         val currValue = grid[y][x]
         return directions()
-            .filter { it.x >= 0 && it.y >= 0 && it.x < grid.size && it.y < grid.size && grid[it.y][it.x] == currValue + 1 }
+            .filter { it.y in 0..grid.lastIndex && it.x in 0..grid[y].lastIndex && grid[it.y][it.x] == currValue + 1 }
     }
 }
 
