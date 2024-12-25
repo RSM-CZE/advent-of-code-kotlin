@@ -20,6 +20,12 @@ fun main() {
         return patterns to words
     }
 
+    fun part1Regex(input: List<String>): Int {
+        val (patterns, words) = readInputForDay(input)
+        val regex = Regex("^(${patterns.joinToString("|")})*$")
+        return words.filter { regex.matches(it) }.size
+    }
+
     fun part1(input: List<String>): Int {
         val (patterns, words) = readInputForDay(input)
         return words.count { patterns.createWord(it) > 0 }
